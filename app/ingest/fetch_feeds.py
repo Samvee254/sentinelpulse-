@@ -56,10 +56,24 @@ def get_or_create_source(db, name: str, source_type: str) -> models.FeedSource:
 
 
 def ingest_urls(db, urls: list[str], source: models.FeedSource):
+    """
+    Bulk-checks which URLs already exist, in batches, instead of querying
+    the database once per URL (which is painfully slow over a network
+    connection to a hosted database once feeds have thousands of entries).
+    """
+    if not urls:
+        return 0
+
+    CHUNK_SIZE = 1000
+    existing_urls = set()
+    for i in range(0, len(urls), CHUNK_SIZE):
+        chunk = urls[i:i + CHUNK_SIZE]
+        rows = db.query(models.Url.url).filter(models.Url.url.in_(chunk)).all()
+        existing_urls.update(row.url for row in rows)
+
     new_count = 0
     for raw_url in urls:
-        existing = db.query(models.Url).filter_by(url=raw_url).first()
-        if existing:
+        if raw_url in existing_urls:
             continue
 
         result = score_url(raw_url, is_on_feed=True, check_domain_age=False)
@@ -73,6 +87,7 @@ def ingest_urls(db, urls: list[str], source: models.FeedSource):
         )
         db.add(record)
         new_count += 1
+        existing_urls.add(raw_url)
 
     db.commit()
     return new_count

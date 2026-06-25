@@ -5,3 +5,4 @@ pydantic
 requests
 python-dotenv
 python-whois
+psycopg2-binary

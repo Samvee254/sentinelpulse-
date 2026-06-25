@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SentinelPulse</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo-row">
+    <span class="logo-dot"></span>
+    <h1>SentinelPulse</h1>
+  </div>
+  <p class="tagline">See threats before they spread</p>
+</header>
+
+<main>
+
+  <section id="check-tab" class="tab-panel active">
+    <h2>Check a link</h2>
+    <p class="hint">Paste a suspicious link, message, or website address.</p>
+    <form id="check-form">
+      <input type="text" id="check-input" placeholder="e.g. http://fake-mpesa-login.com" required>
+      <button type="submit">Check this link</button>
+    </form>
+    <div id="check-result"></div>
+  </section>
+
+  <section id="alerts-tab" class="tab-panel">
+    <h2>Recent alerts</h2>
+    <p class="hint">Scam campaigns detected automatically or from reports.</p>
+    <div id="alerts-list" class="card-list">
+      <p class="loading">Loading alerts...</p>
+    </div>
+  </section>
+
+  <section id="report-tab" class="tab-panel">
+    <h2>Report a scam</h2>
+    <p class="hint">Seen a suspicious link or number? Tell us.</p>
+    <form id="report-form">
+      <label for="report-url">Suspicious link (optional)</label>
+      <input type="text" id="report-url" placeholder="http://...">
+
+      <label for="report-phone">Phone number (optional)</label>
+      <input type="text" id="report-phone" placeholder="e.g. 0712345678">
+
+      <label for="report-description">What happened?</label>
+      <textarea id="report-description" rows="4" placeholder="Describe the scam..." required></textarea>
+
+      <button type="submit">Submit report</button>
+    </form>
+    <div id="report-result"></div>
+  </section>
+
+</main>
+
+<nav class="tab-bar">
+  <button class="tab-btn active" data-tab="check-tab">
+    <span class="icon">🔗</span><span>Check</span>
+  </button>
+  <button class="tab-btn" data-tab="alerts-tab">
+    <span class="icon">⚠️</span><span>Alerts</span>
+  </button>
+  <button class="tab-btn" data-tab="report-tab">
+    <span class="icon">📢</span><span>Report</span>
+  </button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -6,6 +6,8 @@ This is the backend: a FastAPI app, a database schema for tracking
 flagged URLs, user reports, detected scam campaigns, and the alerts shown
 in the mobile app.
 
+Live API: https://sentinelpulse-api-v8sz.onrender.com
+Interactive docs: https://sentinelpulse-api-v8sz.onrender.com/docs
 ## Project structure
 
 sentinelpulse/app/main.py - FastAPI entrypoint

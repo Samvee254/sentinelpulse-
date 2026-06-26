@@ -1,6 +1,15 @@
 // Change this if your API URL is ever different.
 const API_BASE = "https://sentinelpulse-api-v8sz.onrender.com";
 
+// ---- Make the app installable ----
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch((err) => {
+      console.warn("Service worker registration failed:", err);
+    });
+  });
+}
+
 // ---- First-visit intro ----
 const introOverlay = document.getElementById("intro-overlay");
 const introDismiss = document.getElementById("intro-dismiss");

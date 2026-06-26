@@ -32,7 +32,22 @@ def keyword_score(url: str) -> tuple[float, list[str]]:
     score = min(len(hits) * 25, 50)
     reasons = [f"contains brand keyword '{kw}'" for kw in hits]
     return score, reasons
+# TLDs that are cheap and easy to register anonymously, and disproportionately
+# used for short-lived scam/phishing campaigns. Not proof of malice on their
+# own, but a real signal worth weighting.
+SUSPICIOUS_TLDS = [
+    ".click", ".tk", ".xyz", ".top", ".work", ".loan", ".win",
+    ".bid", ".men", ".gq", ".cf", ".ml", ".ga", ".icu", ".cam",
+]
 
+
+def tld_score(domain: str) -> tuple[float, list[str]]:
+    """Flag domains using TLDs that are cheap, anonymous, and scam-favored."""
+    lowered = domain.lower()
+    for tld in SUSPICIOUS_TLDS:
+        if lowered.endswith(tld):
+            return 20.0, [f"uses suspicious top-level domain '{tld}'"]
+    return 0.0, []
 
 def lookup_domain_age_days(domain: str) -> Optional[int]:
     """
@@ -101,6 +116,10 @@ def score_url(
     reasons += r
 
     s, r = blacklist_score(is_on_feed)
+    total += s
+    reasons += r
+
+    s, r = tld_score(domain)
     total += s
     reasons += r
 

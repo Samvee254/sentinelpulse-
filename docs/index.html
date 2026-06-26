@@ -4,9 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SentinelPulse</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<div id="intro-overlay" class="intro-overlay">
+  <div class="intro-card">
+    <span class="logo-dot logo-dot-lg"></span>
+    <h2>Welcome to SentinelPulse</h2>
+    <p>Kenya's cyber early-warning system. Here's what you can do:</p>
+    <ul class="intro-list">
+      <li><strong>Check</strong> -- paste any link to see if it's likely a scam.</li>
+      <li><strong>Alerts</strong> -- see scam campaigns detected automatically.</li>
+      <li><strong>Report</strong> -- tell us about a scam you've seen.</li>
+    </ul>
+    <button id="intro-dismiss">Got it</button>
+  </div>
+</div>
 
 <header class="app-header">
   <div class="logo-row">
@@ -32,7 +47,7 @@
     <h2>Recent alerts</h2>
     <p class="hint">Scam campaigns detected automatically or from reports.</p>
     <div id="alerts-list" class="card-list">
-      <p class="loading">Loading alerts...</p>
+      <div class="spinner"></div>
     </div>
   </section>
 

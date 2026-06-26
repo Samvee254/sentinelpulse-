@@ -1,6 +1,19 @@
 // Change this if your API URL is ever different.
 const API_BASE = "https://sentinelpulse-api-v8sz.onrender.com";
 
+// ---- First-visit intro ----
+const introOverlay = document.getElementById("intro-overlay");
+const introDismiss = document.getElementById("intro-dismiss");
+
+if (localStorage.getItem("sp_intro_seen")) {
+  introOverlay.classList.add("hidden");
+}
+
+introDismiss.addEventListener("click", () => {
+  introOverlay.classList.add("hidden");
+  localStorage.setItem("sp_intro_seen", "1");
+});
+
 // ---- Tab switching ----
 const tabButtons = document.querySelectorAll(".tab-btn");
 const tabPanels = document.querySelectorAll(".tab-panel");
@@ -28,7 +41,7 @@ checkForm.addEventListener("submit", async (e) => {
   const url = document.getElementById("check-input").value.trim();
   if (!url) return;
 
-  checkResult.innerHTML = '<p class="loading">Checking...</p>';
+  checkResult.innerHTML = '<div class="spinner"></div>';
   const submitBtn = checkForm.querySelector("button");
   submitBtn.disabled = true;
 
@@ -75,7 +88,7 @@ function renderCheckResult(data) {
 const alertsList = document.getElementById("alerts-list");
 
 async function loadAlerts() {
-  alertsList.innerHTML = '<p class="loading">Loading alerts...</p>';
+  alertsList.innerHTML = '<div class="spinner"></div>';
   try {
     const res = await fetch(`${API_BASE}/alerts/`);
     if (!res.ok) throw new Error(`Server returned ${res.status}`);
@@ -117,7 +130,7 @@ reportForm.addEventListener("submit", async (e) => {
     description: document.getElementById("report-description").value.trim(),
   };
 
-  reportResult.innerHTML = '<p class="loading">Submitting...</p>';
+  reportResult.innerHTML = '<div class="spinner"></div>';
   const submitBtn = reportForm.querySelector("button");
   submitBtn.disabled = true;
 

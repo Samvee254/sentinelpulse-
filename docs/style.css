@@ -252,3 +252,78 @@ button:disabled {
 .tab-btn.active {
   color: var(--accent);
 }
+
+/* ---- Spinner ---- */
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 12px 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- Intro overlay ---- */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+  transition: opacity 0.25s ease;
+}
+
+.intro-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  max-width: 360px;
+  text-align: center;
+}
+
+.logo-dot-lg {
+  width: 28px;
+  height: 28px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.intro-card h2 {
+  font-size: 1.2rem;
+  margin: 0 0 8px;
+}
+
+.intro-card p {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin: 0 0 14px;
+}
+
+.intro-list {
+  text-align: left;
+  font-size: 0.85rem;
+  color: var(--text);
+  padding-left: 18px;
+  margin: 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.intro-card button {
+  width: 100%;
+}

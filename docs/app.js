@@ -38,6 +38,9 @@ tabButtons.forEach((btn) => {
     if (btn.dataset.tab === "alerts-tab") {
       loadAlerts();
     }
+    if (btn.dataset.tab === "stats-tab") {
+      loadStats();
+    }
   });
 });
 
@@ -160,6 +163,72 @@ reportForm.addEventListener("submit", async (e) => {
     submitBtn.disabled = false;
   }
 });
+
+// ---- Stats dashboard ----
+const statsContent = document.getElementById("stats-content");
+
+async function loadStats() {
+  statsContent.innerHTML = '<div class="spinner"></div>';
+  try {
+    const res = await fetch(`${API_BASE}/stats/`);
+    if (!res.ok) throw new Error(`Server returned ${res.status}`);
+    const data = await res.json();
+    renderStats(data);
+  } catch (err) {
+    statsContent.innerHTML = `<p class="error-state">Couldn't load stats. ${err.message}</p>`;
+  }
+}
+
+function renderBreakdown(title, counts) {
+  const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+  const rows = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, count]) => {
+      const pct = Math.round((count / total) * 100);
+      return `
+        <div class="breakdown-row">
+          <span class="breakdown-name">${escapeHtml(name)}</span>
+          <span class="breakdown-bar-track">
+            <span class="breakdown-bar-fill" style="width:${pct}%"></span>
+          </span>
+          <span class="breakdown-count">${count}</span>
+        </div>
+      `;
+    })
+    .join("");
+
+  return `
+    <div class="breakdown-section">
+      <p class="breakdown-title">${escapeHtml(title)}</p>
+      ${rows}
+    </div>
+  `;
+}
+
+function renderStats(data) {
+  statsContent.innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-number">${data.total_urls.toLocaleString()}</p>
+        <p class="stat-label">URLs scanned</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number">${data.active_campaigns.toLocaleString()}</p>
+        <p class="stat-label">Active campaigns</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number">${data.total_reports.toLocaleString()}</p>
+        <p class="stat-label">Reports submitted</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number">${data.total_alerts.toLocaleString()}</p>
+        <p class="stat-label">Alerts published</p>
+      </div>
+    </div>
+    ${renderBreakdown("By status", data.urls_by_status)}
+    ${renderBreakdown("By source", data.urls_by_source)}
+  `;
+}
 
 // ---- Helpers ----
 function escapeHtml(str) {

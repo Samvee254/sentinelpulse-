@@ -327,3 +327,78 @@ button:disabled {
 .intro-card button {
   width: 100%;
 }
+
+/* ---- Stats dashboard ---- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.stat-card .stat-number {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.stat-card .stat-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 4px 0 0;
+}
+
+.breakdown-section {
+  margin-bottom: 20px;
+}
+
+.breakdown-title {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 10px;
+}
+
+.breakdown-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+}
+
+.breakdown-row .breakdown-name {
+  flex: 0 0 110px;
+  color: var(--text-dim);
+}
+
+.breakdown-row .breakdown-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--surface-2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.breakdown-row .breakdown-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+}
+
+.breakdown-row .breakdown-count {
+  flex: 0 0 auto;
+  font-weight: 600;
+  min-width: 36px;
+  text-align: right;
+}

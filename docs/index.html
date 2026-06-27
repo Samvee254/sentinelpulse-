@@ -69,9 +69,17 @@
 
       <button type="submit">Submit report</button>
     </form>
-    <div id="report-result"></div>
+  <div id="report-result"></div>
   </section>
 
+  <section id="stats-tab" class="tab-panel">
+    <h2>Dashboard</h2>
+    <p class="hint">What SentinelPulse has detected so far.</p>
+    <div id="stats-content">
+      <div class="spinner"></div>
+    </div>
+  </section>  
+  
 </main>
 
 <nav class="tab-bar">
@@ -83,6 +91,9 @@
   </button>
   <button class="tab-btn" data-tab="report-tab">
     <span class="icon">📢</span><span>Report</span>
+  </button>
+  <button class="tab-btn" data-tab="stats-tab">
+    <span class="icon">📊</span><span>Stats</span>
   </button>
 </nav>
 

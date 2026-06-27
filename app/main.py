@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .database import Base, engine
-from .routers import urls, reports, alerts
+from .routers import urls, reports, alerts, stats
 
 Base.metadata.create_all(bind=engine)
 
@@ -30,6 +30,7 @@ app.add_middleware(
 app.include_router(urls.router)
 app.include_router(reports.router)
 app.include_router(alerts.router)
+app.include_router(stats.router)
 
 
 @app.get("/")

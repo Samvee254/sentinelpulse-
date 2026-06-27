@@ -59,3 +59,11 @@ class CampaignOut(BaseModel):
     region: Optional[str] = None
     active: bool
     created_at: datetime
+
+class StatsOut(BaseModel):
+    total_urls: int
+    total_reports: int
+    total_alerts: int
+    active_campaigns: int
+    urls_by_status: dict[str, int]
+    urls_by_source: dict[str, int]

@@ -17,8 +17,13 @@ from ..database import SessionLocal, Base, engine
 from .. import models
 from ..scoring import score_url
 
-OPENPHISH_FEED_URL = "https://openphish.com/feed.txt"
+OPENPHISH_FEED_URL = "https://openphish.com/feed.txt"  # community feed, rate-limited
 URLHAUS_FEED_URL = "https://urlhaus.abuse.ch/downloads/text_recent/"
+THREATFOX_FEED_URL = "https://threatfox.abuse.ch/export/json/recent/"
+
+# ThreatFox lists many IOC types (hashes, registry keys, etc.) -- we only
+# want the ones that map to something we can score as a URL/domain.
+THREATFOX_RELEVANT_TYPES = {"url", "domain", "ip:port"}
 
 
 def fetch_openphish() -> list[str]:
@@ -45,6 +50,32 @@ def fetch_urlhaus() -> list[str]:
         return []
 
 
+def fetch_threatfox() -> list[str]:
+    """
+    ThreatFox (abuse.ch) tracks malware C2 infrastructure -- a different
+    angle than OpenPhish (phishing sites) and URLhaus (malware downloads).
+    Response shape: {"<id>": [{"ioc_value": ..., "ioc_type": ..., ...}]}
+    """
+    try:
+        resp = requests.get(THREATFOX_FEED_URL, timeout=15)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # A clean feed with zero new IOCs returns a status dict, not IOC entries.
+        if not isinstance(data, dict):
+            return []
+
+        values = []
+        for entries in data.values():
+            for entry in entries:
+                if entry.get("ioc_type") in THREATFOX_RELEVANT_TYPES:
+                    values.append(entry["ioc_value"])
+        return values
+    except (requests.RequestException, ValueError) as e:
+        print(f"[fetch_threatfox] failed: {e}")
+        return []
+
+
 def get_or_create_source(db, name: str, source_type: str) -> models.FeedSource:
     source = db.query(models.FeedSource).filter_by(name=name).first()
     if not source:
@@ -63,6 +94,15 @@ def ingest_urls(db, urls: list[str], source: models.FeedSource):
     """
     if not urls:
         return 0
+
+    # The url column is VARCHAR(2048). A handful of feed entries are
+    # absurdly long (encoded tokens, etc.) and would fail the insert --
+    # skip those rather than crashing the whole batch.
+    MAX_URL_LENGTH = 2000
+    too_long = sum(1 for u in urls if len(u) > MAX_URL_LENGTH)
+    urls = [u for u in urls if len(u) <= MAX_URL_LENGTH]
+    if too_long:
+        print(f"  (skipped {too_long} URL(s) exceeding {MAX_URL_LENGTH} characters)")
 
     CHUNK_SIZE = 1000
     existing_urls = set()
@@ -87,10 +127,22 @@ def ingest_urls(db, urls: list[str], source: models.FeedSource):
         )
         db.add(record)
         new_count += 1
-        existing_urls.add(raw_url)
+        existing_urls.add(raw_url)  # guard against duplicates within the same feed
 
     db.commit()
     return new_count
+
+
+def run_feed(db, name: str, source_type: str, fetch_fn):
+    """Run one feed end-to-end, isolated so a failure here doesn't block the rest."""
+    try:
+        source = get_or_create_source(db, name, source_type)
+        urls = fetch_fn()
+        added = ingest_urls(db, urls, source)
+        print(f"{name}: fetched {len(urls)}, added {added} new")
+    except Exception as e:
+        db.rollback()  # clear the failed transaction so the next feed can still run
+        print(f"{name}: FAILED -- {e}")
 
 
 def main():
@@ -98,15 +150,9 @@ def main():
     db = SessionLocal()
 
     try:
-        openphish_source = get_or_create_source(db, "OpenPhish", "phishing_feed")
-        openphish_urls = fetch_openphish()
-        added = ingest_urls(db, openphish_urls, openphish_source)
-        print(f"OpenPhish: fetched {len(openphish_urls)}, added {added} new")
-
-        urlhaus_source = get_or_create_source(db, "URLhaus", "malware_feed")
-        urlhaus_urls = fetch_urlhaus()
-        added = ingest_urls(db, urlhaus_urls, urlhaus_source)
-        print(f"URLhaus: fetched {len(urlhaus_urls)}, added {added} new")
+        run_feed(db, "OpenPhish", "phishing_feed", fetch_openphish)
+        run_feed(db, "URLhaus", "malware_feed", fetch_urlhaus)
+        run_feed(db, "ThreatFox", "malware_cc_feed", fetch_threatfox)
     finally:
         db.close()
 

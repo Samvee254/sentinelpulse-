@@ -1,8 +1,8 @@
-// Minimal service worker: caches the app shell (HTML/CSS/JS/icons) so the
-// app installs properly and the UI still loads if the network is briefly
-// unavailable. API calls (to Render) are NOT cached -- those always need
-// to be live, fresh data.
-const CACHE_NAME = "sentinelpulse-shell-v1";
+// Service worker: network-first for the app shell, so the installed app
+// always shows the latest version when online. Falls back to the cached
+// copy only when offline. Bump CACHE_NAME whenever this file changes --
+// that's what makes the browser notice there's an update at all.
+const CACHE_NAME = "sentinelpulse-shell-v2";
 const SHELL_FILES = [
   "./",
   "./index.html",
@@ -39,7 +39,15 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // Network-first: try to fetch the latest version. Only fall back to the
+  // cache if the network request fails (i.e. genuinely offline).
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    fetch(event.request)
+      .then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });

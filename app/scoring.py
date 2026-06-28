@@ -82,9 +82,14 @@ def domain_age_score(domain_age_days: Optional[int] = None) -> tuple[float, list
 
 
 def blacklist_score(is_on_feed: bool) -> tuple[float, list[str]]:
-    """Direct hit on a known threat intel feed (PhishTank/OpenPhish/URLhaus)."""
+    """
+    Direct hit on a known threat intel feed (OpenPhish/URLhaus/ThreatFox).
+    Weighted high on purpose: these feeds have already manually/automatically
+    confirmed the entry as malicious -- that confirmation alone should be
+    enough to call it "confirmed" without needing other signals to stack up.
+    """
     if is_on_feed:
-        return 40.0, ["matched a known threat intelligence feed"]
+        return 75.0, ["matched a known threat intelligence feed"]
     return 0.0, []
 
 

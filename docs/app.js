@@ -14,12 +14,12 @@ if ("serviceWorker" in navigator) {
 const introOverlay = document.getElementById("intro-overlay");
 const introDismiss = document.getElementById("intro-dismiss");
 
-if (localStorage.getItem("sp_intro_seen")) {
-  introOverlay.classList.add("hidden");
+if (!localStorage.getItem("sp_intro_seen")) {
+  introOverlay.classList.add("show");
 }
 
 introDismiss.addEventListener("click", () => {
-  introOverlay.classList.add("hidden");
+  introOverlay.classList.remove("show");
   localStorage.setItem("sp_intro_seen", "1");
 });
 

@@ -31,6 +31,19 @@ introDismiss.addEventListener("click", () => {
   localStorage.setItem("sp_intro_seen", "1");
 });
 
+// ---- About modal ----
+const aboutOverlay = document.getElementById("about-overlay");
+const aboutTrigger = document.getElementById("about-trigger");
+const aboutDismiss = document.getElementById("about-dismiss");
+
+aboutTrigger.addEventListener("click", () => {
+  aboutOverlay.classList.add("show");
+});
+
+aboutDismiss.addEventListener("click", () => {
+  aboutOverlay.classList.remove("show");
+});
+
 // ---- Tab switching ----
 const tabButtons = document.querySelectorAll(".tab-btn");
 const tabPanels = document.querySelectorAll(".tab-panel");

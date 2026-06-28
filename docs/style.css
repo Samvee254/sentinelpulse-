@@ -401,3 +401,59 @@ button:disabled {
   min-width: 36px;
   text-align: right;
 }
+
+/* ---- About button + footer ---- */
+.logo-row {
+  position: relative;
+}
+
+.about-trigger {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.about-founder {
+  text-align: left;
+  color: var(--text) !important;
+  font-size: 0.85rem !important;
+}
+
+.about-link {
+  display: block;
+  text-align: center;
+  color: var(--accent);
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+  text-decoration: none;
+}
+
+.about-link:active {
+  opacity: 0.8;
+}
+
+.app-footer {
+  padding: 16px 20px 8px;
+  text-align: center;
+}
+
+.app-footer p {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.app-footer a {
+  color: var(--text-dim);
+  text-decoration: underline;
+}

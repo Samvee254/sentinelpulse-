@@ -30,9 +30,24 @@
   <div class="logo-row">
     <span class="logo-dot"></span>
     <h1>SentinelPulse</h1>
+    <button id="about-trigger" class="about-trigger" aria-label="About SentinelPulse">ⓘ</button>
   </div>
   <p class="tagline">See threats before they spread</p>
 </header>
+
+<div id="about-overlay" class="intro-overlay">
+  <div class="intro-card">
+    <span class="logo-dot logo-dot-lg"></span>
+    <h2>About SentinelPulse</h2>
+    <p>Kenya's cyber early-warning system -- built to help people spot
+       phishing links and scam campaigns before they spread.</p>
+    <p class="about-founder">Founded and built by <strong>Samantha Vivian</strong>,
+       a cybersecurity student building tools to protect Kenyans from
+       cyber threats.</p>
+    <a href="https://github.com/Samvee254/sentinelpulse-" target="_blank" rel="noopener" class="about-link">View source on GitHub</a>
+    <button id="about-dismiss">Close</button>
+  </div>
+</div>
 
 <main>
 
@@ -69,7 +84,7 @@
 
       <button type="submit">Submit report</button>
     </form>
-  <div id="report-result"></div>
+    <div id="report-result"></div>
   </section>
 
   <section id="stats-tab" class="tab-panel">
@@ -78,9 +93,15 @@
     <div id="stats-content">
       <div class="spinner"></div>
     </div>
-  </section>  
-  
+  </section>
+
 </main>
+
+<footer class="app-footer">
+  <p>&copy; 2026 SentinelPulse &middot; Built by Samantha Vivian &middot;
+    <a href="https://github.com/Samvee254/sentinelpulse-" target="_blank" rel="noopener">GitHub</a>
+  </p>
+</footer>
 
 <nav class="tab-bar">
   <button class="tab-btn active" data-tab="check-tab">

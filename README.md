@@ -6,6 +6,14 @@ This is the backend: a FastAPI app, a database schema for tracking
 flagged URLs, user reports, detected scam campaigns, and the alerts shown
 in the mobile app.
 
+## About
+
+SentinelPulse is an independent cybersecurity project founded and
+developed by Samantha Vivian, a cybersecurity student building tools
+to protect Kenyans from cyber threats.
+
+Licensed under the MIT License -- see LICENSE for details.
+
 Live API: https://sentinelpulse-api-v8sz.onrender.com
 Interactive docs: https://sentinelpulse-api-v8sz.onrender.com/docs
 ## Project structure

@@ -16,9 +16,17 @@ const introDismiss = document.getElementById("intro-dismiss");
 
 if (!localStorage.getItem("sp_intro_seen")) {
   introOverlay.classList.add("show");
+
+  // Briefly disable the button so an accidental tap right as the app opens
+  // can't instantly dismiss the intro before anyone's had a chance to read it.
+  introDismiss.disabled = true;
+  setTimeout(() => {
+    introDismiss.disabled = false;
+  }, 600);
 }
 
 introDismiss.addEventListener("click", () => {
+  if (introDismiss.disabled) return;
   introOverlay.classList.remove("show");
   localStorage.setItem("sp_intro_seen", "1");
 });

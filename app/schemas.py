@@ -67,3 +67,15 @@ class StatsOut(BaseModel):
     active_campaigns: int
     urls_by_status: dict[str, int]
     urls_by_source: dict[str, int]
+
+class PhoneCheckRequest(BaseModel):
+    phone_number: str
+
+
+class PhoneCheckResponse(BaseModel):
+    phone_number: str
+    report_count: int
+    risk_level: str
+    in_active_campaign: bool
+    campaign_title: Optional[str] = None
+    reasons: list[str] = []

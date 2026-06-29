@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .database import Base, engine
-from .routers import urls, reports, alerts, stats
+from .routers import urls, reports, alerts, stats, phones
 
 Base.metadata.create_all(bind=engine)
 
@@ -31,7 +31,7 @@ app.include_router(urls.router)
 app.include_router(reports.router)
 app.include_router(alerts.router)
 app.include_router(stats.router)
-
+app.include_router(phones.router)
 
 @app.get("/")
 def root():

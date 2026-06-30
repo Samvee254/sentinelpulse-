@@ -101,6 +101,62 @@ function riskTier(score) {
   return { tier: "low", label: "Looks low risk" };
 }
 
+// ---- Check a phone number ----
+const phoneCheckForm = document.getElementById("phone-check-form");
+const phoneCheckResult = document.getElementById("phone-check-result");
+
+phoneCheckForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const phoneNumber = document.getElementById("phone-check-input").value.trim();
+  if (!phoneNumber) return;
+
+  phoneCheckResult.innerHTML = '<div class="spinner"></div>';
+  const submitBtn = phoneCheckForm.querySelector("button");
+  submitBtn.disabled = true;
+
+  try {
+    const res = await fetch(`${API_BASE}/phones/check`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone_number: phoneNumber }),
+    });
+
+    if (!res.ok) throw new Error(`Server returned ${res.status}`);
+    const data = await res.json();
+    renderPhoneCheckResult(data);
+  } catch (err) {
+    phoneCheckResult.innerHTML = `<p class="error-state">Couldn't check this number right now. ${err.message}</p>`;
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
+
+function phoneRiskLabel(level) {
+  const labels = {
+    unknown: "No reports yet",
+    low: "Low risk",
+    medium: "Use caution",
+    high: "High risk",
+    critical: "Critical risk",
+  };
+  return labels[level] || level;
+}
+
+function renderPhoneCheckResult(data) {
+  const reasons = (data.reasons || [])
+    .map((r) => `<li>${escapeHtml(r)}</li>`)
+    .join("");
+
+  phoneCheckResult.innerHTML = `
+    <div class="result-card risk-${data.risk_level}">
+      <p class="result-status">${escapeHtml(data.phone_number)}</p>
+      <p class="result-score">${data.report_count}</p>
+      <p class="result-status">${phoneRiskLabel(data.risk_level)} -- ${data.report_count} report(s)</p>
+      ${reasons ? `<ul class="reason-list">${reasons}</ul>` : ""}
+    </div>
+  `;
+}
+
 function renderCheckResult(data) {
   const { tier, label } = riskTier(data.risk_score);
   const reasons = (data.reasons || [])

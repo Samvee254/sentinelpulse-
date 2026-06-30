@@ -457,3 +457,19 @@ button:disabled {
   color: var(--text-dim);
   text-decoration: underline;
 }
+
+/* ---- Phone number checker ---- */
+.section-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 28px 0 20px;
+}
+
+.result-card.risk-critical {
+  border-color: var(--danger);
+  background: linear-gradient(0deg, rgba(255,92,92,0.12), rgba(255,92,92,0.12)), var(--surface);
+}
+
+.result-card.risk-unknown {
+  border-color: var(--border);
+}
